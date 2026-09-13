@@ -1,3 +1,14 @@
+/* =====================================================
+   BARBERTECH - Estilos Globais (Layout Moderno)
+   Fonte: Inter (Google Fonts)
+   Paleta: preto, cinza e branco
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Fonte serifada usada nos títulos da landing page (visual clássico) */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap');
+
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
@@ -5,131 +16,1057 @@
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #111111;
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 1.5;
+}
 
+/* =====================================================
+   TELA DE LOGIN
+   ===================================================== */
+
+.pagina-login {
+    display: flex;
     min-height: 100vh;
+    background: #f0f0f0;
+}
 
+/* Painel esquerdo decorativo */
+.pagina-login::before {
+    content: '';
+    display: block;
+    width: 45%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 60%, #444444 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+}
+
+/* Caixa do formulário de login */
+.container-login {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    padding: 56px 48px;
+    width: 55%;
+    margin-left: 45%;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    max-width: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
-.login-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.logo-login {
+    margin-bottom: 40px;
 }
 
-.login-box {
-    width: 400px;
-
-    background-color: #ffffff;
-
-    padding: 40px;
-
-    border-radius: 12px;
-
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+.logo-login .icone-logo {
+    width: 48px;
+    margin-bottom: 16px;
+    filter: brightness(0); /* deixa a imagem preta */
 }
 
-.login-box h1 {
-    text-align: center;
-
+.logo-login h1 {
     font-size: 32px;
-
-    color: #111111;
-
-    margin-bottom: 10px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
 }
 
-.subtitle {
-    text-align: center;
-
-    color: #666666;
-
+.logo-login p {
     font-size: 14px;
-
-    margin-bottom: 30px;
+    color: #888888;
+    margin-top: 6px;
+    font-weight: 400;
 }
 
-.input-group {
-    margin-bottom: 20px;
+/* Formulário de login */
+.form-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
 }
 
-.input-group label {
-    display: block;
+/* =====================================================
+   CAMPOS DE FORMULÁRIO
+   ===================================================== */
 
-    font-size: 14px;
-    font-weight: bold;
-
-    color: #333333;
-
-    margin-bottom: 7px;
+.campo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
 
-.input-group input {
-    width: 100%;
-
-    padding: 13px;
-
-    border: 1px solid #cccccc;
-
-    border-radius: 6px;
-
-    font-size: 14px;
-
-    outline: none;
-
-    transition: 0.2s;
-}
-
-.input-group input:focus {
-    border-color: #111111;
-}
-
-button {
-    width: 100%;
-
-    padding: 13px;
-
-    margin-top: 5px;
-
-    background-color: #111111;
-
-    color: #ffffff;
-
-    border: none;
-
-    border-radius: 6px;
-
-    font-size: 15px;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-}
-
-button:hover {
-    background-color: #333333;
-}
-
-.forgot-password {
-    display: block;
-
-    text-align: center;
-
-    margin-top: 20px;
-
-    color: #555555;
-
+.campo-form label {
     font-size: 13px;
+    font-weight: 600;
+    color: #4a4a4a;
+    letter-spacing: 0.2px;
+}
 
+.campo-form input,
+.form-padrao select,
+.form-padrao input {
+    padding: 11px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', Arial, sans-serif;
+    color: #1a1a1a;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.campo-form input:focus,
+.form-padrao select:focus,
+.form-padrao input:focus {
+    border-color: #1a1a1a;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.07);
+}
+
+.campo-form input::placeholder {
+    color: #b0b0b0;
+}
+
+/* Campo com erro de validação (marcado pelo validacao.js) */
+.campo-form input.campo-invalido {
+    border-color: #d64545;
+    background: #fdf5f5;
+}
+
+/* Mensagem de erro que aparece embaixo do campo */
+.erro-campo {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #d64545;
+}
+
+/* =====================================================
+   BOTÕES
+   ===================================================== */
+
+.btn-primario {
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', Arial, sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    width: 100%;
+    letter-spacing: 0.2px;
+}
+
+.btn-primario:hover {
+    background: #2d2d2d;
+}
+
+.btn-primario:active {
+    transform: scale(0.98);
+}
+
+.btn-secundario {
+    background: #fff;
+    color: #1a1a1a;
+    border: 1.5px solid #e0e0e0;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', Arial, sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-secundario:hover {
+    background: #f5f5f5;
+    border-color: #c5c5c5;
+}
+
+.btn-perigo {
+    background: #f5f5f5;
+    color: #333333;
+    border: 1.5px solid #cccccc;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', Arial, sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-perigo:hover {
+    background: #ebebeb;
+}
+
+/* =====================================================
+   CONFIRMAÇÃO INLINE
+   ===================================================== */
+
+#box-confirmar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff0f0;
+    border: 1.5px solid #f5c2c2;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #a00;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+#box-confirmar span {
+    flex: 1;
+}
+.confirmar-sim {
+    background: #a00;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.confirmar-sim:hover {
+    background: #800;
+    color: #fff;
+}
+.confirmar-nao {
+    background: #fff;
+    color: #555;
+    border: 1.5px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+}
+.confirmar-nao:hover {
+    background: #f5f5f5;
+}
+
+/* =====================================================
+   MENSAGENS
+   ===================================================== */
+
+.mensagem-erro {
+    background: #fff0f0;
+    color: #a00;
+    border: 1.5px solid #f5c2c2;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.mensagem-sucesso {
+    background: #f5f5f5;
+    color: #1a1a1a;
+    border: 1.5px solid #cccccc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Link de cadastro */
+.link-cadastro {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #888888;
+}
+
+.link-cadastro a {
+    color: #1a1a1a;
+    font-weight: 600;
     text-decoration: none;
 }
 
-.forgot-password:hover {
+.link-cadastro a:hover {
     text-decoration: underline;
+}
+
+/* =====================================================
+   MENU SUPERIOR
+   ===================================================== */
+
+.menu-topo {
+    background: #3a3a3a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.menu-topo .logo-menu {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.menu-topo nav {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.menu-topo nav a,
+.menu-topo div a:not(.btn-sair) {
+    color: #aaaaaa;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 12px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.menu-topo nav a:hover,
+.menu-topo div a:not(.btn-sair):hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+/* Nome do usuário e botão sair */
+.menu-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.menu-usuario span {
+    color: #aaaaaa;
+    font-weight: 500;
+}
+
+.btn-sair {
+    background: rgba(255,255,255,0.08);
+    color: #aaaaaa;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-sair:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+/* =====================================================
+   CONTEÚDO PRINCIPAL
+   ===================================================== */
+
+.conteudo-principal {
+    padding: 32px 36px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Título das páginas */
+.titulo-pagina {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 28px;
+    letter-spacing: -0.3px;
+}
+
+/* =====================================================
+   CARDS DO DASHBOARD
+   ===================================================== */
+
+.grade-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid #eeeeee;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.card .card-numero {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+}
+
+.card .card-titulo {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   TABELAS
+   ===================================================== */
+
+.container-tabela {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid #eeeeee;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+table thead {
+    background: #f7f7f7;
+    border-bottom: 1px solid #eeeeee;
+}
+
+table thead th {
+    padding: 13px 18px;
+    text-align: left;
+    font-weight: 600;
+    color: #6b6b6b;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #f2f2f2;
+    transition: background 0.15s;
+}
+
+table tbody tr:last-child {
+    border-bottom: none;
+}
+
+table tbody tr:hover {
+    background: #fafafa;
+}
+
+table tbody td {
+    padding: 14px 18px;
+    color: #3d3d3d;
+    font-size: 13px;
+}
+
+/* =====================================================
+   FORMULÁRIOS
+   ===================================================== */
+
+.form-padrao {
+    background: #fff;
+    padding: 28px 32px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid #eeeeee;
+    max-width: 560px;
+}
+
+.form-padrao .campo-form {
+    margin-bottom: 18px;
+}
+
+.form-padrao .linha-dupla {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-padrao .acoes-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+/* =====================================================
+   BADGES DE STATUS
+   ===================================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.badge-pendente {
+    background: #f0f0f0;
+    color: #555555;
+    border: 1px solid #cccccc;
+}
+
+.badge-concluido {
+    background: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #1a1a1a;
+}
+
+.badge-cancelado {
+    background: #e8e8e8;
+    color: #555555;
+    border: 1px solid #bbbbbb;
+}
+
+/* =====================================================
+   CARD DE DESTAQUE (próximo agendamento - cliente)
+   ===================================================== */
+
+.card-destaque {
+    background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 12px;
+    max-width: 520px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.card-destaque.sem-agendamento {
+    background: #fff;
+    color: #1a1a1a;
+    border: 1.5px solid #eeeeee;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.card-destaque-titulo {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaaaaa;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.card-destaque.sem-agendamento .card-destaque-titulo {
+    color: #888888;
+}
+
+.card-destaque-info {
+    font-size: 15px;
+    margin-bottom: 8px;
+    font-weight: 400;
+    color: #dddddd;
+}
+
+.card-destaque.sem-agendamento .card-destaque-info {
+    color: #4a4a4a;
+}
+
+/* =====================================================
+   INPUTS GENÉRICOS (filtros, busca)
+   ===================================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+input[type="time"],
+input[type="password"],
+select,
+textarea {
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Inputs de filtro fora do .form-padrao */
+input[type="date"],
+input[type="text"]:not(.campo-form input) {
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* =====================================================
+   DIVISOR DE SEÇÃO
+   ===================================================== */
+
+.secao-titulo {
+    font-size: 15px;
+    font-weight: 600;
+    color: #3d3d3d;
+    margin-bottom: 14px;
+    margin-top: 28px;
+}
+
+/* =====================================================
+   RESPONSIVIDADE
+   ===================================================== */
+
+/* =====================================================
+   LANDING PAGE (site público da barbearia)
+   Estilo inspirado em barbearia clássica, mas em
+   tons de cinza e branco. Títulos com fonte serifada.
+   ===================================================== */
+
+/* Cores usadas só na landing (ficam agrupadas aqui pra facilitar) */
+.site {
+    --fundo:      #f5f5f5;  /* fundo geral, quase branco */
+    --fundo-alt:  #ffffff;  /* fundo de seções alternadas */
+    --tinta:      #1c1c1c;  /* títulos, quase preto */
+    --texto:      #3f3f3f;  /* texto normal */
+    --suave:      #717171;  /* textos secundários / legendas */
+    --linha:      #d4d4d4;  /* bordas e filetes */
+    --realce:     #525252;  /* cinza de destaque (palavra em itálico, rótulos) */
+
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Rótulo pequeno em maiúsculas e espaçado (ex: "EST. 2009", "BARBEARIA CLÁSSICA") */
+.rotulo {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--suave);
+    font-weight: 500;
+}
+
+/* -------- Cabeçalho fixo do site -------- */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 48px;
+    background: #272727;
+    border-bottom: 1px solid #3f3f3f;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.site-header .marca {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* "EST. 2009" na barra escura fica em cinza claro */
+.site-header .marca .rotulo {
+    color: #aaaaaa;
+}
+
+/* Traço curto antes do "EST. 2009" */
+.site-header .marca .rotulo::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.25);
+    vertical-align: middle;
+    margin-right: 12px;
+}
+
+.site-header .marca .nome {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    padding-left: 16px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.site-nav {
+    display: flex;
+    gap: 32px;
+}
+
+/* Links do menu: sem sublinhado, só mudam de cor */
+.site-nav a {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #aaaaaa;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.site-nav a:hover,
+.site-nav a.ativo {
+    color: #fff;
+}
+
+/* Botão "AGENDAR" do hero (fundo claro): escuro */
+.btn-agendar {
+    background: var(--tinta);
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    display: inline-block;
+    transition: background 0.2s;
+}
+
+.btn-agendar:hover {
+    background: #000;
+}
+
+/* Botão "AGENDAR" dentro da barra escura: invertido (fundo claro) */
+.site-header .btn-agendar {
+    background: #fff;
+    color: #1c1c1c;
+}
+
+.site-header .btn-agendar:hover {
+    background: #d4d4d4;
+}
+
+/* -------- Seção principal (hero) -------- */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 66px);
+}
+
+.hero-texto {
+    padding: 64px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 620px;
+}
+
+/* Rótulo do hero com traço na frente */
+.hero-tag {
+    margin-bottom: 28px;
+}
+
+.hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--realce);
+    vertical-align: middle;
+    margin-right: 16px;
+}
+
+.hero-texto h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 64px;
+    line-height: 1.05;
+    font-weight: 700;
+    color: var(--tinta);
+    letter-spacing: -1px;
+    margin-bottom: 28px;
+}
+
+/* Palavra em itálico e cinza de destaque no meio do título */
+.hero-texto h1 .destaque {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--realce);
+}
+
+.hero-sub {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--texto);
+    max-width: 440px;
+    margin-bottom: 36px;
+}
+
+.hero-acoes {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 48px;
+}
+
+/* Link "Ver serviços ->" com sublinhado fino */
+.link-seta {
+    font-size: 14px;
+    color: var(--tinta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--linha);
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+}
+
+.link-seta:hover {
+    border-color: var(--tinta);
+}
+
+/* Linha de números (avaliação, clientes, anos) */
+.hero-stats {
+    display: flex;
+    gap: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--linha);
+}
+
+.hero-stats .stat-numero {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--tinta);
+}
+
+.hero-stats .stat-texto {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--suave);
+    margin-top: 4px;
+}
+
+/* -------- Imagem do hero (lado direito) -------- */
+.hero-imagem {
+    position: relative;
+    /* Espaço reservado: troque por uma foto real quando tiver.
+       Ex: background: url('../IMAGENS/hero.jpg') center/cover; */
+    background:
+        linear-gradient(135deg, #e8e8e8 0%, #d4d4d4 50%, #a8a8a8 100%);
+}
+
+/* Texto de aviso no meio do espaço reservado (some ao usar foto real) */
+.hero-imagem::after {
+    content: 'ESPAÇO PARA FOTO DA BARBEARIA';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(0, 0, 0, 0.35);
+}
+
+/* Cartão flutuante "próximo horário disponível" */
+.hero-card {
+    position: absolute;
+    left: -60px;
+    bottom: 80px;
+    background: var(--fundo);
+    padding: 24px 32px;
+    max-width: 280px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+}
+
+.hero-card .rotulo {
+    color: var(--realce);
+}
+
+.hero-card .horario {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--tinta);
+    margin: 8px 0 4px;
+}
+
+.hero-card .barbeiro {
+    font-size: 13px;
+    color: var(--suave);
+}
+
+/* -------- Seções de conteúdo simples -------- */
+.site-secao {
+    padding: 80px 48px;
+    border-top: 1px solid var(--linha);
+    background: var(--fundo-alt);
+}
+
+.site-secao > .rotulo {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.site-secao h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--tinta);
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+}
+
+/* Lista de serviços em colunas */
+.grade-servicos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+}
+
+.servico-item {
+    border-top: 2px solid var(--tinta);
+    padding-top: 20px;
+}
+
+.servico-item h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    color: var(--tinta);
+    margin-bottom: 8px;
+}
+
+.servico-item p {
+    font-size: 14px;
+    color: var(--suave);
+    line-height: 1.7;
+}
+
+.servico-item .preco {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--realce);
+}
+
+/* -------- Rodapé do site -------- */
+.site-footer {
+    background: var(--tinta);
+    color: #aaaaaa;
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.site-footer .nome {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    color: #fff;
+}
+
+.site-footer a {
+    color: #d4d4d4;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.site-footer a:hover {
+    color: #fff;
+}
+
+/* -------- Responsivo da landing -------- */
+@media (max-width: 900px) {
+    .site-header {
+        flex-wrap: wrap;
+        padding: 16px 20px;
+        gap: 14px;
+    }
+    .site-nav {
+        order: 3;
+        width: 100%;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+    .hero {
+        grid-template-columns: 1fr;
+    }
+    .hero-texto {
+        padding: 48px 20px;
+        order: 2;
+    }
+    .hero-texto h1 {
+        font-size: 40px;
+    }
+    .hero-stats {
+        gap: 28px;
+        flex-wrap: wrap;
+    }
+    .hero-imagem {
+        order: 1;
+        min-height: 320px;
+    }
+    .hero-card {
+        left: 20px;
+        bottom: 20px;
+    }
+    .site-secao {
+        padding: 48px 20px;
+    }
+    .site-secao h2 {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 900px) {
+    /* No mobile, remove o painel lateral decorativo */
+    .pagina-login::before {
+        display: none;
+    }
+    .container-login {
+        width: 100%;
+        margin-left: 0;
+        padding: 40px 24px;
+        min-height: 100vh;
+    }
+    .menu-topo {
+        padding: 0 16px;
+        height: auto;
+        flex-wrap: wrap;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        gap: 10px;
+    }
+    .menu-topo nav {
+        flex-wrap: wrap;
+        gap: 2px;
+    }
+    .conteudo-principal {
+        padding: 20px 16px;
+    }
+    .form-padrao .linha-dupla {
+        grid-template-columns: 1fr;
+    }
 }
