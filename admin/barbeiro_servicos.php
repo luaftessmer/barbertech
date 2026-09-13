@@ -9,7 +9,6 @@ require_once '../includes/autenticacao.php';
 verificar_acesso('admin');
 
 require_once '../conexao.php';
-require_once '../includes/email.php';
 
 // Precisa do ID do barbeiro na URL
 if (!isset($_GET['id'])) {
@@ -72,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hoje = date('Y-m-d H:i:s');
 
             // Busca agendamentos futuros que contêm esse serviço para esse barbeiro
-            $sql3 = "SELECT a.id_atendimento, a.data_hora
+            $sql3 = "SELECT a.id_atendimento
                      FROM atendimento a
                      JOIN atendimento_servico ats ON a.id_atendimento = ats.id_atendimento
                      WHERE a.id_barbeiro = ?
@@ -84,47 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt3->execute();
             $agendamentos_cancelar = $stmt3->get_result();
 
-            // Busca o nome do serviço para o email
-            $sql_srv  = "SELECT nome FROM servico WHERE id_servico = ?";
-            $stmt_srv = $conn->prepare($sql_srv);
-            $stmt_srv->bind_param('i', $id_servico);
-            $stmt_srv->execute();
-            $nome_servico = $stmt_srv->get_result()->fetch_assoc()['nome'] ?? 'Serviço';
-
-            // Busca o nome do barbeiro para o email
-            $sql_barb  = "SELECT u.nome FROM barbeiro b JOIN usuario u ON b.id_usuario = u.id_usuario WHERE b.id_barbeiro = ?";
-            $stmt_barb = $conn->prepare($sql_barb);
-            $stmt_barb->bind_param('i', $id_barbeiro);
-            $stmt_barb->execute();
-            $nome_barbeiro_email = $stmt_barb->get_result()->fetch_assoc()['nome'] ?? '';
-
-            // Cancela cada agendamento encontrado e envia email ao cliente
+            // Cancela cada agendamento encontrado
             while ($ag = $agendamentos_cancelar->fetch_assoc()) {
                 $sql4  = "UPDATE atendimento SET status = 'cancelado' WHERE id_atendimento = ?";
                 $stmt4 = $conn->prepare($sql4);
                 $stmt4->bind_param('i', $ag['id_atendimento']);
                 $stmt4->execute();
-
-                // Busca dados do cliente para o email
-                $sql5  = "SELECT u.email, u.nome
-                          FROM atendimento a
-                          JOIN cliente c ON a.id_cliente = c.id_cliente
-                          JOIN usuario  u ON c.id_usuario = u.id_usuario
-                          WHERE a.id_atendimento = ?";
-                $stmt5 = $conn->prepare($sql5);
-                $stmt5->bind_param('i', $ag['id_atendimento']);
-                $stmt5->execute();
-                $dados_cliente = $stmt5->get_result()->fetch_assoc();
-
-                if ($dados_cliente) {
-                    email_cancelamento(
-                        $dados_cliente['email'],
-                        $dados_cliente['nome'],
-                        $ag['data_hora'] ?? '',
-                        $nome_barbeiro_email,
-                        $nome_servico
-                    );
-                }
             }
         }
     }
