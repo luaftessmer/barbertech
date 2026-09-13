@@ -4,6 +4,18 @@
 // Página de apresentação. O botão "AGENDAR" leva o
 // visitante para o login/cadastro do sistema.
 // =====================================================
+
+require_once 'conexao.php';
+
+// Busca os serviços ativos cadastrados no sistema
+$servicos_db = $conn->query("SELECT nome, descricao, preco FROM servico ORDER BY preco ASC");
+
+// Busca os barbeiros cadastrados
+$barbeiros_db = $conn->query(
+    "SELECT u.nome FROM barbeiro b
+     JOIN usuario u ON b.id_usuario = u.id_usuario
+     ORDER BY u.nome ASC"
+);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -91,21 +103,19 @@
         <h2>Serviços</h2>
 
         <div class="grade-servicos">
-            <div class="servico-item">
-                <h3>Corte clássico</h3>
-                <p>Tesoura e máquina, acabamento na navalha e finalização com produtos da casa.</p>
-                <span class="preco">A partir de R$ 45</span>
-            </div>
-            <div class="servico-item">
-                <h3>Barba completa</h3>
-                <p>Toalha quente, óleo, navalha e hidratação para modelar a barba do seu jeito.</p>
-                <span class="preco">A partir de R$ 40</span>
-            </div>
-            <div class="servico-item">
-                <h3>Combo corte + barba</h3>
-                <p>O pacote completo em uma única sessão, com preço fechado.</p>
-                <span class="preco">A partir de R$ 75</span>
-            </div>
+            <?php if ($servicos_db && $servicos_db->num_rows > 0): ?>
+                <?php while ($s = $servicos_db->fetch_assoc()): ?>
+                <div class="servico-item">
+                    <h3><?php echo htmlspecialchars($s['nome']); ?></h3>
+                    <?php if (!empty($s['descricao'])): ?>
+                        <p><?php echo htmlspecialchars($s['descricao']); ?></p>
+                    <?php endif; ?>
+                    <span class="preco">R$ <?php echo number_format($s['preco'], 2, ',', '.'); ?></span>
+                </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p style="color:#aaa;">Nenhum serviço cadastrado ainda.</p>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -117,6 +127,17 @@
             Barbeiros experientes, cada um com seu estilo. Na hora de agendar
             você escolhe com quem quer marcar.
         </p>
+
+        <?php if ($barbeiros_db && $barbeiros_db->num_rows > 0): ?>
+        <div class="grade-servicos" style="margin-top: 32px;">
+            <?php while ($b = $barbeiros_db->fetch_assoc()): ?>
+            <div class="servico-item" style="text-align: center;">
+                <div style="font-size: 40px; margin-bottom: 12px;">✂</div>
+                <h3><?php echo htmlspecialchars($b['nome']); ?></h3>
+            </div>
+            <?php endwhile; ?>
+        </div>
+        <?php endif; ?>
     </section>
 
     <!-- ============ CHAMADA PARA AGENDAR ============ -->

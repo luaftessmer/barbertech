@@ -102,28 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body class="pagina-login">
 
-    <!-- Painel esquerdo com texto decorativo (definido via CSS ::before) -->
-    <!-- Conteúdo sobreposto ao painel esquerdo -->
-    <div style="position: fixed; top: 0; left: 0; width: 45%; height: 100vh;
-                display: flex; flex-direction: column; justify-content: center;
-                align-items: center; padding: 48px; z-index: 1; text-align: center;">
-        <div style="color: #fff;">
-            <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px;">
-            </h2>
-            
-            </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Painel direito: formulário -->
     <div class="container-login">
 
         <div class="logo-login">
             <img src="IMAGENS/tesoura.png" alt="BarberTech" class="icone-logo">
-            <h1>Bem-vindo </h1>
-            
+            <h1>Bem-vindo</h1>
+        </div>
 
         <form action="index.php" method="POST" class="form-login">
 

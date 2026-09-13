@@ -81,15 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body class="pagina-login">
 
-    <!-- Painel esquerdo decorativo -->
-    <div style="position: fixed; top: 0; left: 0; width: 45%; height: 100vh;
-                display: flex; flex-direction: column; justify-content: center;
-                align-items: center; padding: 48px; z-index: 1; text-align: center;">
-        <div style="color: #fff;">
-            </p>
-        </div>
-    </div>
-
     <div class="container-login">
 
         <div class="logo-login">
