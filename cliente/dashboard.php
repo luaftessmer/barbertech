@@ -94,8 +94,17 @@ $historico = $stmt->get_result();
             <div class="card-destaque-titulo">Próximo Agendamento</div>
             <div class="card-destaque-info">
                 <!-- Formata a data: ex "Segunda-feira, 25 de Agosto de 2026 às 14:30" -->
-                <strong><?php echo strftime('%A, %d de %B de %Y', strtotime($proximo['data_hora'])); ?>
-                    às <?php echo date('H:i', strtotime($proximo['data_hora'])); ?>
+                <?php
+                    $dias_semana_pt = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+                    $meses_pt       = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+                    $ts_prox        = strtotime($proximo['data_hora']);
+                ?>
+                <strong>
+                    <?php echo $dias_semana_pt[(int)date('w', $ts_prox)]; ?>,
+                    <?php echo date('d', $ts_prox); ?> de
+                    <?php echo $meses_pt[(int)date('n', $ts_prox)]; ?> de
+                    <?php echo date('Y', $ts_prox); ?>
+                    às <?php echo date('H:i', $ts_prox); ?>
                 </strong>
             </div>
             <div class="card-destaque-info">

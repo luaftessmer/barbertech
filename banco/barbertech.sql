@@ -135,6 +135,6 @@ INSERT INTO horario_funcionamento (dia_semana, hora_inicio, hora_fim, intervalo_
 -- Email: admin@barbertech.com | Senha: admin123
 -- IMPORTANTE: Após a instalação, troque a senha pelo painel!
 INSERT INTO usuario (nome, email, senha, telefone, tipo) VALUES
-('Administrador', 'admin@barbertech.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '(00) 00000-0000', 'admin');
--- Obs: a senha acima é o hash de "password" gerado pelo PHP password_hash()
+('Administrador', 'admin@barbertech.com', '$2y$10$uWFygASMINoao8KAPfhPDecs.u8Zf0v5ZA2/CGR199VVDuQ9z.hXe', '(00) 00000-0000', 'admin');
+-- Obs: a senha acima é o hash de "admin123" gerado pelo PHP password_hash()
 -- Para gerar o hash da sua própria senha, use: password_hash('sua_senha', PASSWORD_DEFAULT)

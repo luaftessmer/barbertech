@@ -28,9 +28,10 @@ switch ($periodo) {
         $titulo_periodo = 'Esta semana';
         break;
     case 'mes':
-        $mes            = date('Y-m');
-        $where_data     = "AND DATE_FORMAT(a.data_hora, '%Y-%m') = '$mes'";
-        $titulo_periodo = date('F \d\e Y');
+        $mes        = date('Y-m');
+        $where_data = "AND DATE_FORMAT(a.data_hora, '%Y-%m') = '$mes'";
+        $meses_pt   = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        $titulo_periodo = $meses_pt[(int)date('n')] . ' de ' . date('Y');
         break;
     default:
         $where_data     = '';
