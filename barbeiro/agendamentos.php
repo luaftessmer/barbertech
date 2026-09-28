@@ -84,6 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $acao == 'salvar') {
             $stmt2->execute();
         }
 
+        // Envia o email de confirmação para o cliente
+        require_once '../includes/email.php';
+        enviar_confirmacao_agendamento($conn, $id_atendimento);
+
         $mensagem = 'Agendamento criado com sucesso.';
         $acao = 'listar';
     }
