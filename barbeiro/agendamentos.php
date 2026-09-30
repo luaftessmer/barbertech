@@ -13,7 +13,8 @@ require_once '../includes/horarios_disponiveis.php';
 
 $id_barbeiro = $_SESSION['id_barbeiro'];
 $mensagem    = '';
-$acao        = $_GET['acao'] ?? 'listar';
+$erro        = '';
+$acao       = $_GET['acao'] ?? 'listar';
 
 // -------------------------------------------------------
 // AÇÃO: CANCELAR
@@ -58,7 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $acao == 'salvar') {
     $servicos_ids = array_map('intval', $_POST['servicos'] ?? []);
 
     if (!$id_cliente || empty($data) || empty($horario) || empty($servicos_ids)) {
-        $mensagem = 'Preencha todos os campos.';
+        $erro = 'Preencha todos os campos.';
+        $acao = 'novo';
+    } else {
+        // Trava a agenda do barbeiro e confere se o horário ainda está livre
+        travar_agenda($conn, $id_barbeiro);
+        $erro = validar_agendamento($conn, $id_barbeiro, $data, $horario, $servicos_ids);
+    }
+
+    if ($erro) {
+        liberar_agenda($conn, $id_barbeiro);
         $acao = 'novo';
     } else {
         $data_hora = $data . ' ' . $horario . ':00';
@@ -83,6 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $acao == 'salvar') {
             $stmt2->bind_param('ii', $id_atendimento, $id_servico);
             $stmt2->execute();
         }
+
+        liberar_agenda($conn, $id_barbeiro);
 
         // Envia o email de confirmação para o cliente
         require_once '../includes/email.php';
@@ -182,6 +194,10 @@ $atendimentos = $stmt->get_result();
 
         <?php if ($mensagem): ?>
             <div class="mensagem-sucesso" style="margin-bottom: 20px;"><?php echo $mensagem; ?></div>
+        <?php endif; ?>
+
+        <?php if ($erro): ?>
+            <div class="mensagem-erro" style="margin-bottom: 20px;"><?php echo $erro; ?></div>
         <?php endif; ?>
 
         <!-- FORMULÁRIO: NOVO AGENDAMENTO -->

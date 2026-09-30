@@ -169,4 +169,77 @@ function get_datas_disponiveis($conn) {
 
     return $datas;
 }
+
+// -------------------------------------------------------
+// Valida um agendamento no servidor, logo antes de gravar.
+// Não confia nos dados que vieram do formulário: confere
+// de novo se a data é permitida, se o barbeiro faz todos
+// os serviços e se o horário AINDA está livre.
+//
+// Retorna:
+//   '' (texto vazio) se estiver tudo certo
+//   ou a mensagem de erro para mostrar ao usuário
+// -------------------------------------------------------
+function validar_agendamento($conn, $id_barbeiro, $data, $horario, $servicos_ids) {
+
+    if (empty($servicos_ids)) {
+        return 'Selecione pelo menos um serviço.';
+    }
+
+    // A data precisa estar entre as datas liberadas (não passada e com a barbearia aberta)
+    if (!in_array($data, get_datas_disponiveis($conn), true)) {
+        return 'Data inválida para agendamento.';
+    }
+
+    // O barbeiro precisa realizar TODOS os serviços escolhidos
+    $total        = count($servicos_ids);
+    $placeholders = implode(',', array_fill(0, $total, '?'));
+    $tipos        = str_repeat('i', $total);
+
+    $sql  = "SELECT COUNT(DISTINCT id_servico) AS qtd
+             FROM barbeiro_servico
+             WHERE id_barbeiro = ? AND ativo = 1 AND id_servico IN ($placeholders)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i' . $tipos, $id_barbeiro, ...$servicos_ids);
+    $stmt->execute();
+    if ((int) $stmt->get_result()->fetch_assoc()['qtd'] !== $total) {
+        return 'O barbeiro escolhido não realiza todos os serviços selecionados.';
+    }
+
+    // Soma a duração dos serviços
+    $sql  = "SELECT SUM(duracao) AS total FROM servico WHERE id_servico IN ($placeholders)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($tipos, ...$servicos_ids);
+    $stmt->execute();
+    $duracao_total = (int) $stmt->get_result()->fetch_assoc()['total'];
+
+    // Recalcula os horários livres AGORA e confere se o escolhido ainda está na lista
+    $livres = get_horarios_disponiveis($conn, $id_barbeiro, $data, $duracao_total);
+    if (!in_array($horario, $livres, true)) {
+        return 'Esse horário acabou de ser ocupado ou não está disponível. Escolha outro.';
+    }
+
+    return '';
+}
+
+// -------------------------------------------------------
+// Trava a agenda de um barbeiro enquanto um agendamento
+// é validado e gravado. Assim, se dois clientes confirmarem
+// no mesmo instante, o segundo espera o primeiro terminar
+// e, ao validar, já vê o horário ocupado.
+// Usa o GET_LOCK do MySQL (uma trava com nome).
+// -------------------------------------------------------
+function travar_agenda($conn, $id_barbeiro) {
+    $nome = 'agenda_barbeiro_' . (int) $id_barbeiro;
+    $stmt = $conn->prepare("SELECT GET_LOCK(?, 10)");
+    $stmt->bind_param('s', $nome);
+    $stmt->execute();
+}
+
+function liberar_agenda($conn, $id_barbeiro) {
+    $nome = 'agenda_barbeiro_' . (int) $id_barbeiro;
+    $stmt = $conn->prepare("SELECT RELEASE_LOCK(?)");
+    $stmt->bind_param('s', $nome);
+    $stmt->execute();
+}
 ?>

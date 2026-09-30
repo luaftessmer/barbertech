@@ -27,6 +27,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmar'])) {
     $data          = $_POST['data'];
     $horario       = $_POST['horario'];
     $servicos_ids  = json_decode($_POST['servicos_json'], true);
+    $servicos_ids  = is_array($servicos_ids) ? array_map('intval', $servicos_ids) : [];
+
+    // Trava a agenda do barbeiro e confere se o horário ainda está livre
+    travar_agenda($conn, $id_barbeiro);
+    $erro = validar_agendamento($conn, $id_barbeiro, $data, $horario, $servicos_ids);
+
+    if ($erro) {
+        liberar_agenda($conn, $id_barbeiro);
+        $url = 'novo_agendamento.php?passo=3'
+             . '&servicos=' . implode(',', $servicos_ids)
+             . '&barbeiro=' . $id_barbeiro
+             . '&data='     . urlencode($data)
+             . '&erro='     . urlencode($erro);
+        header('Location: ' . $url);
+        exit();
+    }
 
     $data_hora = $data . ' ' . $horario . ':00';
 
@@ -50,6 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmar'])) {
         $stmt2->bind_param('ii', $id_atendimento, $id_servico);
         $stmt2->execute();
     }
+
+    liberar_agenda($conn, $id_barbeiro);
 
     // Envia o email de confirmação para o cliente
     require_once '../includes/email.php';

@@ -55,6 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $acao == 'salvar') {
         $erro = 'Preencha todos os campos.';
         $acao = 'novo';
     } else {
+        // Trava a agenda do barbeiro e confere se o horário ainda está livre
+        travar_agenda($conn, $id_barbeiro);
+        $erro = validar_agendamento($conn, $id_barbeiro, $data, $horario, $servicos_ids);
+    }
+
+    if ($erro) {
+        liberar_agenda($conn, $id_barbeiro);
+        $acao = 'novo';
+    } else {
         $data_hora = $data . ' ' . $horario . ':00';
 
         // Calcula valor total
@@ -79,6 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $acao == 'salvar') {
             $stmt2->bind_param('ii', $id_atendimento, $id_servico);
             $stmt2->execute();
         }
+
+        liberar_agenda($conn, $id_barbeiro);
 
         // Envia o email de confirmação para o cliente
         require_once '../includes/email.php';
