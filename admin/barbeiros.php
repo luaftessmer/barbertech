@@ -96,8 +96,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute();
                 $stmt->store_result();
 
-                if ($stmt->num_rows > 0) {
+                $email_existe = $stmt->num_rows > 0;
+
+                // Verifica se o telefone já existe (compara só os dígitos)
+                $telefone_digitos = preg_replace('/\D/', '', $telefone);
+                $sql  = "SELECT id_usuario FROM usuario WHERE REGEXP_REPLACE(telefone, '[^0-9]', '') = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('s', $telefone_digitos);
+                $stmt->execute();
+                $stmt->store_result();
+                $telefone_existe = $stmt->num_rows > 0;
+
+                if ($email_existe) {
                     $erro = 'Este email já está cadastrado.';
+                    $acao = 'novo';
+                } elseif ($telefone_existe) {
+                    $erro = 'Este telefone já está cadastrado.';
                     $acao = 'novo';
                 } else {
                     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
