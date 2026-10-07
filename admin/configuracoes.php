@@ -11,6 +11,12 @@ verificar_acesso('admin');
 require_once '../conexao.php';
 
 $mensagem = '';
+$erro     = '';
+
+// Verifica se o texto é um horário válido no formato HH:MM (00:00 a 23:59)
+function hora_valida($hora) {
+    return preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9]$/', $hora) === 1;
+}
 
 // Nomes dos dias da semana para exibição
 $nomes_dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
@@ -20,15 +26,39 @@ $nomes_dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quin
 // -------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    // Valida todos os horários digitados antes de salvar qualquer coisa
+    for ($dia = 0; $dia <= 6; $dia++) {
+        $campos = [
+            trim($_POST['hora_inicio_'   . $dia] ?? ''),
+            trim($_POST['hora_fim_'      . $dia] ?? ''),
+        ];
+        // O intervalo de almoço é opcional: só valida se foi preenchido
+        foreach (['intervalo_ini_', 'intervalo_fim_'] as $campo) {
+            $valor = trim($_POST[$campo . $dia] ?? '');
+            if ($valor !== '') {
+                $campos[] = $valor;
+            }
+        }
+        foreach ($campos as $valor) {
+            if (!hora_valida($valor)) {
+                $erro = 'Horário inválido em ' . $nomes_dias[$dia] . '. Use o formato HH:MM (ex: 09:30).';
+                break 2;
+            }
+        }
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$erro) {
+
     // Percorre os 7 dias da semana (0 a 6)
     for ($dia = 0; $dia <= 6; $dia++) {
 
         // Verifica se o dia está marcado como aberto
         $aberto          = isset($_POST['aberto_' . $dia]) ? 1 : 0;
-        $hora_inicio     = $_POST['hora_inicio_'    . $dia] ?? '09:00';
-        $hora_fim        = $_POST['hora_fim_'        . $dia] ?? '18:00';
-        $intervalo_ini   = $_POST['intervalo_ini_'   . $dia] ?? null;
-        $intervalo_fim   = $_POST['intervalo_fim_'   . $dia] ?? null;
+        $hora_inicio     = trim($_POST['hora_inicio_'    . $dia] ?? '09:00');
+        $hora_fim        = trim($_POST['hora_fim_'        . $dia] ?? '18:00');
+        $intervalo_ini   = trim($_POST['intervalo_ini_'   . $dia] ?? '');
+        $intervalo_fim   = trim($_POST['intervalo_fim_'   . $dia] ?? '');
 
         // Trata campos vazios como NULL no banco
         $intervalo_ini = ($intervalo_ini === '') ? null : $intervalo_ini;
@@ -104,7 +134,9 @@ while ($h = $resultado->fetch_assoc()) {
             border-bottom: 1px solid #eee;
             vertical-align: middle;
         }
-        .tabela-config input[type="time"] {
+        .tabela-config .campo-hora {
+            width: 70px;
+            text-align: center;
             padding: 6px 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -127,6 +159,10 @@ while ($h = $resultado->fetch_assoc()) {
 
         <?php if ($mensagem): ?>
             <div class="mensagem-sucesso" style="margin-bottom: 20px;"><?php echo $mensagem; ?></div>
+        <?php endif; ?>
+
+        <?php if ($erro): ?>
+            <div class="mensagem-erro" style="margin-bottom: 20px;"><?php echo $erro; ?></div>
         <?php endif; ?>
 
         <p style="color:#666; margin-bottom: 24px; font-size: 14px;">
@@ -162,6 +198,15 @@ while ($h = $resultado->fetch_assoc()) {
                         $h_fim  = substr($h_fim,  0, 5);
                         $al_ini = $al_ini ? substr($al_ini, 0, 5) : '';
                         $al_fim = $al_fim ? substr($al_fim, 0, 5) : '';
+
+                        // Se deu erro ao salvar, mostra o que o admin digitou em vez do valor salvo
+                        if ($erro) {
+                            $aberto = isset($_POST['aberto_' . $dia]) ? 1 : 0;
+                            $h_ini  = htmlspecialchars($_POST['hora_inicio_'   . $dia] ?? '');
+                            $h_fim  = htmlspecialchars($_POST['hora_fim_'      . $dia] ?? '');
+                            $al_ini = htmlspecialchars($_POST['intervalo_ini_' . $dia] ?? '');
+                            $al_fim = htmlspecialchars($_POST['intervalo_fim_' . $dia] ?? '');
+                        }
                     ?>
                     <tr id="linha_<?php echo $dia; ?>" class="<?php echo $aberto ? '' : 'linha-fechada'; ?>">
 
@@ -176,22 +221,30 @@ while ($h = $resultado->fetch_assoc()) {
                         </td>
 
                         <td>
-                            <input type="time" name="hora_inicio_<?php echo $dia; ?>"
+                            <input type="text" class="campo-hora" name="hora_inicio_<?php echo $dia; ?>"
+                                   inputmode="numeric" maxlength="5" placeholder="HH:MM"
+                                   pattern="([01][0-9]|2[0-3]):[0-5][0-9]" title="Formato HH:MM (ex: 09:30)"
                                    value="<?php echo $h_ini; ?>" required>
                         </td>
 
                         <td>
-                            <input type="time" name="hora_fim_<?php echo $dia; ?>"
+                            <input type="text" class="campo-hora" name="hora_fim_<?php echo $dia; ?>"
+                                   inputmode="numeric" maxlength="5" placeholder="HH:MM"
+                                   pattern="([01][0-9]|2[0-3]):[0-5][0-9]" title="Formato HH:MM (ex: 09:30)"
                                    value="<?php echo $h_fim; ?>" required>
                         </td>
 
                         <td>
-                            <input type="time" name="intervalo_ini_<?php echo $dia; ?>"
+                            <input type="text" class="campo-hora" name="intervalo_ini_<?php echo $dia; ?>"
+                                   inputmode="numeric" maxlength="5" placeholder="HH:MM"
+                                   pattern="([01][0-9]|2[0-3]):[0-5][0-9]" title="Formato HH:MM (ex: 09:30)"
                                    value="<?php echo $al_ini; ?>">
                         </td>
 
                         <td>
-                            <input type="time" name="intervalo_fim_<?php echo $dia; ?>"
+                            <input type="text" class="campo-hora" name="intervalo_fim_<?php echo $dia; ?>"
+                                   inputmode="numeric" maxlength="5" placeholder="HH:MM"
+                                   pattern="([01][0-9]|2[0-3]):[0-5][0-9]" title="Formato HH:MM (ex: 09:30)"
                                    value="<?php echo $al_fim; ?>">
                         </td>
 
@@ -221,6 +274,30 @@ while ($h = $resultado->fetch_assoc()) {
             linha.classList.add('linha-fechada');
         }
     }
+
+    // Campos de hora: aceita só números e coloca os ":" automaticamente
+    document.querySelectorAll('.campo-hora').forEach(function (campo) {
+
+        campo.addEventListener('input', function () {
+            var digitos = campo.value.replace(/\D/g, '').slice(0, 4);
+            campo.value = digitos.length > 2
+                ? digitos.slice(0, 2) + ':' + digitos.slice(2)
+                : digitos;
+        });
+
+        // Ao sair do campo, completa o formato (ex: "9" vira "09:00", "930" vira "09:30")
+        campo.addEventListener('blur', function () {
+            var digitos = campo.value.replace(/\D/g, '');
+            if (digitos === '') return;
+
+            if (digitos.length <= 2) {
+                digitos = digitos.padStart(2, '0') + '00';
+            } else if (digitos.length === 3) {
+                digitos = '0' + digitos;
+            }
+            campo.value = digitos.slice(0, 2) + ':' + digitos.slice(2, 4);
+        });
+    });
     </script>
 
 </body>
